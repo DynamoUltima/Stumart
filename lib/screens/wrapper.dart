@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:phone_auth_app/models/user.dart';
 import 'package:phone_auth_app/screens/authenticate/authenticate.dart';
 import 'package:phone_auth_app/screens/home/home.dart';
+import 'package:phone_auth_app/screens/home/intro.dart';
 import 'package:provider/provider.dart';
 
 
@@ -17,7 +18,9 @@ class Wrapper extends StatelessWidget {
    if(user == null){
      return Authenticate();
    } else{
-     return Home();
+     return Intro();  
+
+     //Home();
    }
 
 
