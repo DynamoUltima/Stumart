@@ -8,9 +8,11 @@ class NewsFeedPage extends StatefulWidget {
 class _NewsFeedPageState extends State<NewsFeedPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text("data"),
-      
+    return Scaffold(
+          body: Container(
+        child: Text("data"),
+        
+      ),
     );
   }
 }

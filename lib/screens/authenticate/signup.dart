@@ -15,9 +15,15 @@ class _SignUpPageState extends State<SignUpPage> {
   String _program;
   String _location;
 
+  var _categories = ["Student", "Company", "Not Student"];
+
+  String _identityValue;
+  bool loading = false;
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+
   Widget _buildFirstName() {
     return TextFormField(
-      decoration: textDecoration.copyWith(labelText: "FirstName"),
+      decoration: TextDecoration.copyWith(labelText: "FirstName"),
       keyboardType: TextInputType.text,
       validator: (val) {
         if (val.isEmpty) {
@@ -35,7 +41,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _buildLastName() {
     return TextFormField(
-      decoration: textDecoration.copyWith(labelText: "Last Name"),
+      decoration: TextDecoration.copyWith(labelText: "Last Name"),
       validator: (val) {
         if (val.isEmpty) {
           return "Enter Last Name";
@@ -52,9 +58,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _buildPassword() {
     return TextFormField(
-      decoration: textDecoration.copyWith(labelText: "Password"),
-      keyboardType:TextInputType.visiblePassword ,
-      obscureText:true,
+      decoration: TextDecoration.copyWith(labelText: "Password"),
+      keyboardType: TextInputType.visiblePassword,
+      obscureText: true,
       validator: (val) {
         if (val.isEmpty) {
           return "Enter Last Name";
@@ -63,7 +69,7 @@ class _SignUpPageState extends State<SignUpPage> {
       },
       onChanged: (val) {
         setState(() {
-          _lastName = val;
+          _password = val;
         });
       },
     );
@@ -71,7 +77,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _buildEmail() {
     return TextFormField(
-      decoration: textDecoration.copyWith(labelText: "Email"),
+      decoration: TextDecoration.copyWith(labelText: "Email"),
+      keyboardType: TextInputType.emailAddress,
       validator: (val) {
         Pattern pattern =
             r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -89,24 +96,147 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  Widget _buildPhoneNumber() {
+    return TextFormField(
+      decoration: TextDecoration.copyWith(labelText: "Phone Number"),
+      keyboardType: TextInputType.phone,
+      obscureText: true,
+      validator: (val) {
+        if (val.isEmpty) {
+          return "Enter Last Name";
+        }
+        return null;
+      },
+      onChanged: (val) {
+        setState(() {
+          _phoneNumber = val;
+        });
+      },
+    );
+  }
+
+  Widget _buildProgram() {
+    return TextFormField(
+      decoration: TextDecoration.copyWith(labelText: "Program"),
+      keyboardType: TextInputType.visiblePassword,
+      obscureText: true,
+      validator: (val) {
+        if (val.isEmpty) {
+          return "Enter Last Name";
+        }
+        return null;
+      },
+      onChanged: (val) {
+        setState(() {
+          _program = val;
+        });
+      },
+    );
+  }
+
+  Widget _buildLocation() {
+    return TextFormField(
+      decoration: TextDecoration.copyWith(labelText: "Location"),
+      keyboardType: TextInputType.text,
+      obscureText: true,
+      validator: (val) {
+        if (val.isEmpty) {
+          return "Enter Last Name";
+        }
+        return null;
+      },
+      onChanged: (val) {
+        setState(() {
+          _location = val;
+        });
+      },
+    );
+  }
+
+  Widget _buildIdentity() {
+    return FormField<String>(
+      validator: (val) => val.isEmpty ? "Select an Option" : null,
+      builder: (FormFieldState<String> state) {
+        return InputDecorator(
+          decoration: InputDecoration(
+            //labelStyle: textStyle,
+            labelText: "Identity",
+            errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
+            hintText: 'Please select your Identity',
+            // border: OutlineInputBorder(
+            //   borderRadius: BorderRadius.circular(5.0),
+            // ),
+          ),
+          isEmpty: _identityValue == 'Enter Your Identity',
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: _identityValue,
+              isDense: true,
+              onChanged: (String newValue) {
+                setState(() {
+                  _identityValue = newValue;
+                  state.didChange(newValue);
+                });
+              },
+              items: _categories.map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _submitButton() {
+    return FlatButton(
+      onPressed: () async {
+        if (_formkey.currentState.validate()) {
+          print(_location);
+        }
+      },
+      child: Text("Submit"),
+      color: Colors.teal[400],
+      textColor: Colors.white,
+    );
+  }
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Login Form"),
+        title: Text("Sign Up Form"),
         backgroundColor: Colors.teal[400],
+        automaticallyImplyLeading: false,
       ),
-      body: Container(
-        child: Form(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-            child: Column(children: <Widget>[
-              _buildFirstName(),
-              _buildLastName(),
-              _buildEmail(),
-              _buildPassword()
-            ],),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Container(
+          child: Form(
+            key: _formkey,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+              child: Column(
+                children: <Widget>[
+                  _buildFirstName(),
+                  _buildLastName(),
+                  _buildEmail(),
+                  _buildPassword(),
+                  _buildPhoneNumber(),
+                  _buildIdentity(),
+                  _buildLocation(),
+                  _buildProgram(),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  _submitButton()
+                ],
+              ),
+            ),
           ),
         ),
       ),

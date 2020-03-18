@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
 
-const textDecoration = InputDecoration(
+const TextDecoration = InputDecoration(
  
 );
