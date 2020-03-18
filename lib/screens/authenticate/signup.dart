@@ -1,5 +1,10 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
+import 'package:phone_auth_app/services/auth.dart';
+import 'package:phone_auth_app/services/database.dart';
 import 'package:phone_auth_app/shared/constants.dart';
+import 'package:phone_auth_app/shared/loading.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -20,6 +25,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String _identityValue;
   bool loading = false;
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  final AuthService _auth = AuthService();
 
   Widget _buildFirstName() {
     return TextFormField(
@@ -195,6 +201,31 @@ class _SignUpPageState extends State<SignUpPage> {
     return FlatButton(
       onPressed: () async {
         if (_formkey.currentState.validate()) {
+          setState(()=> loading = true );
+
+          Map<String,Object> userInfo= HashMap();
+          userInfo.putIfAbsent("first", ()=>_firstName);
+          userInfo.putIfAbsent("last", ()=>_lastName);
+          userInfo.putIfAbsent("email", ()=>_email);
+          userInfo.putIfAbsent("phone", ()=>_phoneNumber);
+          userInfo.putIfAbsent("program", ()=>_program);
+          userInfo.putIfAbsent("locationt", ()=>_location);
+
+
+          dynamic result =await _auth.createWithEmailAndPassword(_email, _password);
+          DatabaseService(uid:result.uid).updateUserData(userInfo);
+
+          
+
+          if(result== null){
+            setState(() {
+              loading=  false;
+            });
+            print("error signing in");
+
+          }else{
+            print(result.uid);
+          }
           print(_location);
         }
       },
@@ -207,7 +238,8 @@ class _SignUpPageState extends State<SignUpPage> {
   
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading ? Loading() : Scaffold(
+      //work on popup toast bar to display error signin in with firebase
       appBar: AppBar(
         title: Text("Sign Up Form"),
         backgroundColor: Colors.teal[400],

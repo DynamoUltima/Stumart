@@ -13,6 +13,34 @@ class _LoginPageState extends State<LoginPage> {
 
   var secondColor = Colors.teal[400];
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+
+  Widget _loginButton(BuildContext context){
+
+    return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 90),
+                    child: Hero(
+                      child: RaisedButton(
+                        elevation: 10,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(25.0),
+                        ),
+                        onPressed: ()  async{
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>NewsFeedPage()));
+                        },
+                        color: Colors.teal[400],
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            'LOGIN',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      tag: 'logger',
+                    ),
+                  );
+
+  }
   
 
   @override
@@ -99,29 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(
                     height: screenHeight * 0.05,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 90),
-                    child: Hero(
-                      child: RaisedButton(
-                        elevation: 10,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(25.0),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>NewsFeedPage()));
-                        },
-                        color: Colors.teal[400],
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            'LOGIN',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                      tag: 'logger',
-                    ),
-                  ),
+                  _loginButton(context)
                 ],
               ),
             ),
