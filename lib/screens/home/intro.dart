@@ -78,7 +78,7 @@ class _IntroState extends State<Intro> {
               SizedBox(
                 width: screenWidth * 0.6,
                 child: OutlineButton(
-                  onPressed: () {
+                  onPressed: () async{
                     Navigator.push(
                           context,
                           MaterialPageRoute(

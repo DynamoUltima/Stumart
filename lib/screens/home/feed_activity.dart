@@ -10,19 +10,30 @@ class FeedActivity extends StatefulWidget {
 }
 
 class _FeedActivityState extends State<FeedActivity> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // final post = Provider.of<QuerySnapshot>(context);
+
+    // for (var postInfo in post.documents) {
+    //   //print this if documents exist to avoid null errors
+    //   if (postInfo.exists) print(postInfo.data);
+    // }
+  }
   @override
   Widget build(BuildContext context) {
-
-    final post = Provider.of<QuerySnapshot>(context);
     
-    for( var postInfo in post.documents){
-      //print this if documents exist to avoid null errors
-      //if(postInfo.exists)
-      print(postInfo.data);
-    }
     return Container(
+      child: ListView(
+        scrollDirection: Axis.vertical,
+        children: <Widget>[
+          ListTile(
+            leading: Icon(Icons.person),
 
-    
+        )],
+      ),
     );
   }
 }

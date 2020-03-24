@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:phone_auth_app/screens/home/news_feed.dart';
 import 'package:phone_auth_app/services/auth.dart';
 import 'package:phone_auth_app/services/database.dart';
 import 'package:phone_auth_app/shared/constants.dart';
@@ -47,6 +48,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _buildLastName() {
     return TextFormField(
+      keyboardType: TextInputType.text,
       decoration: TextDecoration.copyWith(labelText: "Last Name"),
       validator: (val) {
         if (val.isEmpty) {
@@ -89,7 +91,7 @@ class _SignUpPageState extends State<SignUpPage> {
         Pattern pattern =
             r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
         RegExp regex = new RegExp(pattern);
-        if (!regex.hasMatch(val) == false) {
+        if (!regex.hasMatch(val)) {
           return "Enter Valid Email";
         }
         return null;
@@ -106,7 +108,6 @@ class _SignUpPageState extends State<SignUpPage> {
     return TextFormField(
       decoration: TextDecoration.copyWith(labelText: "Phone Number"),
       keyboardType: TextInputType.phone,
-      obscureText: true,
       validator: (val) {
         if (val.isEmpty) {
           return "Enter Last Name";
@@ -124,8 +125,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _buildProgram() {
     return TextFormField(
       decoration: TextDecoration.copyWith(labelText: "Program"),
-      keyboardType: TextInputType.visiblePassword,
-      obscureText: true,
+      keyboardType: TextInputType.text,
       validator: (val) {
         if (val.isEmpty) {
           return "Enter Last Name";
@@ -144,7 +144,6 @@ class _SignUpPageState extends State<SignUpPage> {
     return TextFormField(
       decoration: TextDecoration.copyWith(labelText: "Location"),
       keyboardType: TextInputType.text,
-      obscureText: true,
       validator: (val) {
         if (val.isEmpty) {
           return "Enter Last Name";
@@ -201,30 +200,33 @@ class _SignUpPageState extends State<SignUpPage> {
     return FlatButton(
       onPressed: () async {
         if (_formkey.currentState.validate()) {
-          setState(()=> loading = true );
+          setState(() => loading = true);
 
-          Map<String,Object> userInfo= HashMap();
-          userInfo.putIfAbsent("first", ()=>_firstName);
-          userInfo.putIfAbsent("last", ()=>_lastName);
-          userInfo.putIfAbsent("email", ()=>_email);
-          userInfo.putIfAbsent("phone", ()=>_phoneNumber);
-          userInfo.putIfAbsent("program", ()=>_program);
-          userInfo.putIfAbsent("locationt", ()=>_location);
+          Map<String, Object> userInfo = HashMap();
+          userInfo.putIfAbsent("first", () => _firstName);
+          userInfo.putIfAbsent("last", () => _lastName);
+          userInfo.putIfAbsent("email", () => _email);
+          userInfo.putIfAbsent("phone", () => _phoneNumber);
+          userInfo.putIfAbsent("program", () => _program);
+          userInfo.putIfAbsent("location", () => _location);
+          userInfo.putIfAbsent("identity", () => _identityValue);
 
+          dynamic result =
+              await _auth.createWithEmailAndPassword(_email, _password);
+          await DatabaseService(uid: result.uid).updateUserData(userInfo);
 
-          dynamic result =await _auth.createWithEmailAndPassword(_email, _password);
-          DatabaseService(uid:result.uid).updateUserData(userInfo);
-
-          
-
-          if(result== null){
+          if (result == null) {
             setState(() {
-              loading=  false;
+              loading = false;
             });
             print("error signing in");
-
-          }else{
+          } else {
             print(result.uid);
+            setState(() {
+              loading = false;
+            });
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => NewsFeedPage()));
           }
           print(_location);
         }
@@ -235,43 +237,45 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  
   @override
   Widget build(BuildContext context) {
-    return loading ? Loading() : Scaffold(
-      //work on popup toast bar to display error signin in with firebase
-      appBar: AppBar(
-        title: Text("Sign Up Form"),
-        backgroundColor: Colors.teal[400],
-        automaticallyImplyLeading: false,
-      ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Container(
-          child: Form(
-            key: _formkey,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-              child: Column(
-                children: <Widget>[
-                  _buildFirstName(),
-                  _buildLastName(),
-                  _buildEmail(),
-                  _buildPassword(),
-                  _buildPhoneNumber(),
-                  _buildIdentity(),
-                  _buildLocation(),
-                  _buildProgram(),
-                  SizedBox(
-                    height: 15,
+    return loading
+        ? Loading()
+        : Scaffold(
+            //work on popup toast bar to display error signin in with firebase
+            appBar: AppBar(
+              title: Text("Sign Up Form"),
+              backgroundColor: Colors.teal[400],
+              automaticallyImplyLeading: false,
+            ),
+            body: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Container(
+                child: Form(
+                  key: _formkey,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 15),
+                    child: Column(
+                      children: <Widget>[
+                        _buildFirstName(),
+                        _buildLastName(),
+                        _buildEmail(),
+                        _buildPassword(),
+                        _buildPhoneNumber(),
+                        _buildIdentity(),
+                        _buildLocation(),
+                        _buildProgram(),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        _submitButton()
+                      ],
+                    ),
                   ),
-                  _submitButton()
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-      ),
-    );
+          );
   }
 }
