@@ -14,16 +14,18 @@ class Wrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     
     final user = Provider.of<User>(context);
+    
 
    if(user == null){
-     return Authenticate();
+     return Authenticate();//Intro( should be here)
    } else{
-     return Intro();  
+     return Intro();//this should be reversed but may be lept so for testing purposes  
+     //News activity should be here
 
      //Home();
    }
 
 
-    return Authenticate();
+    // return Authenticate();
   }
 }

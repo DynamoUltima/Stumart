@@ -30,6 +30,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _buildFirstName() {
     return TextFormField(
+      textCapitalization: TextCapitalization.words,
       decoration: TextDecoration.copyWith(labelText: "FirstName"),
       keyboardType: TextInputType.text,
       validator: (val) {
@@ -48,6 +49,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _buildLastName() {
     return TextFormField(
+      textCapitalization: TextCapitalization.words,
       keyboardType: TextInputType.text,
       decoration: TextDecoration.copyWith(labelText: "Last Name"),
       validator: (val) {
@@ -202,7 +204,7 @@ class _SignUpPageState extends State<SignUpPage> {
         if (_formkey.currentState.validate()) {
           setState(() => loading = true);
 
-          Map<String, Object> userInfo = HashMap();
+          Map<String, Object> userInfo = Map();
           userInfo.putIfAbsent("first", () => _firstName);
           userInfo.putIfAbsent("last", () => _lastName);
           userInfo.putIfAbsent("email", () => _email);

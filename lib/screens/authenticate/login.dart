@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:phone_auth_app/screens/customs/custom_clipper.dart';
 import 'package:phone_auth_app/screens/home/news_feed.dart';
+import 'package:phone_auth_app/screens/home/post_profile.dart';
 import 'package:phone_auth_app/services/auth.dart';
 import 'package:phone_auth_app/shared/loading.dart';
 
@@ -17,9 +18,6 @@ class _LoginPageState extends State<LoginPage> {
   String _email;
   String _password;
   bool loading = false;
-
-  // Pattern pattern =
-  //     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
   Widget _loginButton(BuildContext context) {
     return Padding(
@@ -54,7 +52,10 @@ class _LoginPageState extends State<LoginPage> {
                   loading = false;
                 });
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => NewsFeedPage()));
+                  MaterialPageRoute(
+                    builder: (context) => NewsFeedPage(),
+                  ),
+                ); //NewsFeedPage()//PostProfile()
               }
             }
           },
@@ -84,65 +85,65 @@ class _LoginPageState extends State<LoginPage> {
     return loading
         ? Loading()
         : Scaffold(
-      body: Stack(
-        children: <Widget>[
-          ClipPath(
-            clipper: CustomShapeClipper(),
-            child: Container(
-              child: Stack(
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Center(
-                        child: Text(
-                          'Welcome Back',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 32,
-                          ),
+            body: Stack(
+              children: <Widget>[
+                ClipPath(
+                  clipper: CustomShapeClipper(),
+                  child: Container(
+                    child: Stack(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Center(
+                              child: Text(
+                                'Welcome Back',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 32,
+                                ),
+                              ),
+                            )
+                          ],
                         ),
-                      )
-                    ],
+                      ],
+                    ),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [secondColor, secondColor],
+                      ),
+                    ),
+                    height: 260,
                   ),
-                ],
-              ),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [secondColor, secondColor],
                 ),
-              ),
-              height: 260,
-            ),
-          ),
-          //TODO: make the orientation unchangeable
-          //TODO: use safe area for phones with notches on top
+                //TODO: make the orientation unchangeable
+                //TODO: use safe area for phones with notches on top
 
-          Form(
-            key: _formkey,
-            child: Container(
-              child: ListView(
-                children: <Widget>[
-                  SizedBox(
-                    height: screenHeight * 0.5,
+                Form(
+                  key: _formkey,
+                  child: Container(
+                    child: ListView(
+                      children: <Widget>[
+                        SizedBox(
+                          height: screenHeight * 0.5,
+                        ),
+                        _buildEmail(),
+                        SizedBox(
+                          height: screenHeight * 0.05,
+                        ),
+                        buildPassword(),
+                        SizedBox(
+                          height: screenHeight * 0.05,
+                        ),
+                        _loginButton(context)
+                      ],
+                    ),
                   ),
-                  _buildEmail(),
-                  SizedBox(
-                    height: screenHeight * 0.05,
-                  ),
-                  buildPassword(),
-                  SizedBox(
-                    height: screenHeight * 0.05,
-                  ),
-                  _loginButton(context)
-                ],
-              ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
   }
 
   Padding buildPassword() {
@@ -175,6 +176,7 @@ class _LoginPageState extends State<LoginPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: TextFormField(
+        keyboardType: TextInputType.emailAddress,
         onChanged: (val) {
           setState(() {
             _email = val;
