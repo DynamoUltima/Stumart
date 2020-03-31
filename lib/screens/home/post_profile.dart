@@ -21,7 +21,7 @@ class _PostProfileState extends State<PostProfile> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   final dateFormat = DateFormat("EEEE, MMMM d, yyyy");
-  final timeFormat = DateFormat("h:mm a");
+  
 
   String _gender;
   String _campus;

@@ -39,12 +39,22 @@ class DatabaseService {
   List<UserProfile> _userProfileListFromSnapShot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
       return UserProfile(
-          first: doc.data['first'] ?? "",
-          last: doc.data['last'] ?? "",
-          email: doc.data['email'] ?? "",
-          gender: doc.data['gender'] ?? "",
-          campus: doc.data['campus'] ?? "",
-          program: doc.data['program'] ?? "");
+        first: doc.data['first'] ?? "",
+        last: doc.data['last'] ?? "",
+        email: doc.data['email'] ?? "",
+        gender: doc.data['gender'] ?? "",
+        campus: doc.data['campus'] ?? "",
+        program: doc.data['program'] ?? "",
+        age:doc.data["age"] ?? "",
+        phone: doc.data["phone"] ?? "",
+        location: doc.data["location"] ?? "",
+        gpa: doc.data["gpa"]??"",
+        postId: doc.data["post_id"]??"",
+
+        
+
+
+      );
     }).toList();
   }
 
