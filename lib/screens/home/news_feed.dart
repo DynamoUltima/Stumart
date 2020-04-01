@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:phone_auth_app/models/user_profile.dart';
 import 'package:phone_auth_app/screens/home/feed_activity.dart';
 import 'package:phone_auth_app/screens/home/post_profile.dart';
+import 'package:phone_auth_app/screens/navigations/notification_activity.dart';
+import 'package:phone_auth_app/screens/navigations/notifications.dart';
+import 'package:phone_auth_app/screens/navigations/settings.dart';
 import 'package:phone_auth_app/services/database.dart';
 import 'package:provider/provider.dart';
 
@@ -19,13 +22,14 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
       _selectedIndex = index;
     });
   }
+  List<Widget> basePages=<Widget>[FeedActivity(),NotificationArena(),Settings()];
 
   @override
   Widget build(BuildContext context) {
     return StreamProvider<List<UserProfile>>.value(
       value: DatabaseService().retrieveUserProfile,
       child: Scaffold(
-        body: FeedActivity(),
+        body: basePages.elementAt(_selectedIndex),
         bottomNavigationBar: buildBottomAppBar(),
         floatingActionButton: buildFloatingActionButton(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

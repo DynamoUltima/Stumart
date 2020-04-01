@@ -4,6 +4,7 @@ import 'package:phone_auth_app/models/user.dart';
 
 import 'package:phone_auth_app/models/user_profile.dart';
 import 'package:phone_auth_app/screens/home/details.dart';
+import 'package:phone_auth_app/shared/loading.dart';
 
 import 'package:provider/provider.dart';
 
@@ -50,21 +51,24 @@ class _FeedActivityState extends State<FeedActivity> {
     );
   }
 
-  Container buildProfileListContainer(List<UserProfile> userProfiles) {
-    return Container(
-      child: ListView.builder(
-        dragStartBehavior: DragStartBehavior.start,
-        scrollDirection: Axis.vertical,
-        itemCount: userProfiles.length ?? 0,
-        shrinkWrap: true,
-        physics: ClampingScrollPhysics(),
-        itemBuilder: (context, index) {
-          final profile = userProfiles[index];
+  Widget buildProfileListContainer(List<UserProfile> userProfiles) {
+    if (userProfiles.isNotEmpty) {
+      return Container(
+        child: ListView.builder(
+          dragStartBehavior: DragStartBehavior.start,
+          scrollDirection: Axis.vertical,
+          itemCount: userProfiles.length ?? 0,
+          shrinkWrap: true,
+          physics: ClampingScrollPhysics(),
+          itemBuilder: (context, index) {
+            final profile = userProfiles[index];
 
-          return ProfileTile(profile: profile);
-        },
-      ),
-    );
+            return ProfileTile(profile: profile);
+          },
+        ),
+      );
+    }
+    return Loading();
   }
 
   Row buildProfileText() {
@@ -116,7 +120,9 @@ class ProfileTile extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => DetailsPage(profile: profile,),
+                builder: (context) => DetailsPage(
+                  profile: profile,
+                ),
               ),
             );
           },

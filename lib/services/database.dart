@@ -3,6 +3,7 @@ import 'dart:core';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:phone_auth_app/models/user_data.dart';
+import 'package:phone_auth_app/models/user_notifications.dart';
 import 'package:phone_auth_app/models/user_profile.dart';
 
 class DatabaseService {
@@ -24,6 +25,12 @@ class DatabaseService {
     return await postCollection.document(uid).setData(postProfile);
   }
 
+  Future notifyUser(Map notify, String notId) async {
+    final CollectionReference notificationCollection =
+        Firestore.instance.collection("Users/" + notId + "/Notifications");
+    return await notificationCollection.document(uid).setData(notify);
+  }
+
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
       email: snapshot.data['email'] ?? "",
@@ -36,6 +43,15 @@ class DatabaseService {
     );
   }
 
+  List<UserNotification> _userNotificationFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      return UserNotification(
+        notifyMessage: doc.data["notifyMessage"] ?? "",
+        timestamp: doc.data["timestamp"] ?? "",
+      );
+    }).toList();
+  }
+
   List<UserProfile> _userProfileListFromSnapShot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
       return UserProfile(
@@ -45,15 +61,12 @@ class DatabaseService {
         gender: doc.data['gender'] ?? "",
         campus: doc.data['campus'] ?? "",
         program: doc.data['program'] ?? "",
-        age:doc.data["age"] ?? "",
+        age: doc.data["age"] ?? "",
         phone: doc.data["phone"] ?? "",
         location: doc.data["location"] ?? "",
-        gpa: doc.data["gpa"]??"",
-        postId: doc.data["post_id"]??"",
-
-        
-
-
+        gpa: doc.data["gpa"] ?? "",
+        postId: doc.data["post_id"] ?? "",
+        interest: doc.data["interest"] ?? "",
       );
     }).toList();
   }
@@ -68,5 +81,13 @@ class DatabaseService {
 
   Stream<List<UserProfile>> get retrieveUserProfile {
     return postCollection.snapshots().map(_userProfileListFromSnapShot);
+  }
+
+  Stream<List<UserNotification>> get retrieveUserNotifications {
+    final CollectionReference notificationCollection =
+        Firestore.instance.collection("Users/" + uid + "/Notifications");
+    return notificationCollection
+        .snapshots()
+        .map(_userNotificationFromSnapshot);
   }
 }

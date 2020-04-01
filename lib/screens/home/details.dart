@@ -1,14 +1,17 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
+import 'package:phone_auth_app/models/user.dart';
 import 'package:phone_auth_app/models/user_profile.dart';
+import 'package:phone_auth_app/services/database.dart';
+import 'package:provider/provider.dart';
 
 class DetailsPage extends StatefulWidget {
-
   final UserProfile profile;
 
-  DetailsPage({Key key, this.profile}) : super(key: key);
- 
+  DetailsPage({this.profile});
+  // : super(key: key);
 
-  
   @override
   _DetailsPageState createState() => _DetailsPageState();
 }
@@ -16,13 +19,19 @@ class DetailsPage extends StatefulWidget {
 class _DetailsPageState extends State<DetailsPage> {
   var personalInfoText = Row(
     children: <Widget>[
-      Text("Personal Info",textScaleFactor: 1.5,),
+      Text(
+        "Personal Info",
+        textScaleFactor: 1.5,
+      ),
     ],
   );
 
   var otherDetailsText = Row(
     children: <Widget>[
-      Text("Other Details",textScaleFactor: 1.5,),
+      Text(
+        "Other Details",
+        textScaleFactor: 1.5,
+      ),
     ],
   );
   @override
@@ -38,7 +47,7 @@ class _DetailsPageState extends State<DetailsPage> {
               height: 40,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal:16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: personalInfoText,
             ),
             buildPersonalInfo(),
@@ -49,51 +58,85 @@ class _DetailsPageState extends State<DetailsPage> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: otherDetailsText,
             ),
-            buildOtherInfo()
+            buildOtherInfo(),
+            SizedBox(
+              height: 20,
+            ),
+            buildInterestCard(),
+            SizedBox(
+              height: 20,
+            ),
+            buildAddButton(context)
           ],
         ),
       ),
     );
   }
 
-  Widget BuildInterestCard(){
-     return Card(
-       child: Container(
-         child:Column(
-           children: <Widget>[
-             Row(
+  Widget buildAddButton(BuildContext context) {
+    return RaisedButton(
+      color: Colors.teal,
+      onPressed: () async {
+        final user = Provider.of<User>(context, listen: false);
+        String notifyMessage =
+            "Company Name has sent a request for an internship";
+        Map<String, Object> notify = HashMap();
+        notify.putIfAbsent("notifyMessage", () => notifyMessage);
+        await DatabaseService(uid: user.uid).notifyUser(notify,widget.profile.postId).then((response){
+          print(response);
+        }).catchError((onError){
+          print(onError);
+        });
+      },
+      child: Text(
+        "Add",
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+  }
+
+  Widget buildInterestCard() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        elevation: 10,
+        child: Container(
+            child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Icon(Icons.star, color: Colors.teal),
+                SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  "Interest",
+                  style: TextStyle(
+                    color: Colors.teal,
+                  ),
+                  textScaleFactor: 1.1,
+                ),
+              ],
+            ),
+            SizedBox(height: 25),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
                 children: <Widget>[
-                  Icon(Icons.star, color: Colors.white),
-                   SizedBox(width: 8,),
                   Text(
-                    "Interest",
+                    widget.profile.interest ?? 'default value',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.teal,
                     ),
                     textScaleFactor: 1.1,
                   ),
                 ],
               ),
-              SizedBox(height:25),
-              Row(
-                children: <Widget>[
-                  Icon(Icons.star, color: Colors.white),
-                   SizedBox(width: 8,),
-                  Text(
-                    widget.profile.interest,
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                    textScaleFactor: 1.1,
-                  ),
-                ],
-              ),
-
-
-         ],)
-       ),
-
-     );
+            ),
+          ],
+        )),
+      ),
+    );
   }
 
   Widget buildOtherInfo() {
@@ -108,9 +151,11 @@ class _DetailsPageState extends State<DetailsPage> {
               Row(
                 children: <Widget>[
                   Icon(Icons.school, color: Colors.white),
-                  SizedBox(width: 8,),
+                  SizedBox(
+                    width: 8,
+                  ),
                   Text(
-                    widget.profile.identity,
+                    widget.profile.identity ?? 'default value',
                     style: TextStyle(
                       color: Colors.white,
                     ),
@@ -121,9 +166,11 @@ class _DetailsPageState extends State<DetailsPage> {
               Row(
                 children: <Widget>[
                   Icon(Icons.school, color: Colors.white),
-                  SizedBox(width: 8,),
+                  SizedBox(
+                    width: 8,
+                  ),
                   Text(
-                    widget.profile.campus,
+                    widget.profile.campus ?? 'default value',
                     style: TextStyle(
                       color: Colors.white,
                     ),
@@ -134,9 +181,11 @@ class _DetailsPageState extends State<DetailsPage> {
               Row(
                 children: <Widget>[
                   Icon(Icons.book, color: Colors.white),
-                   SizedBox(width: 8,),
+                  SizedBox(
+                    width: 8,
+                  ),
                   Text(
-                    widget.profile.program,
+                    widget.profile.program ?? 'default value',
                     style: TextStyle(
                       color: Colors.white,
                     ),
@@ -147,9 +196,11 @@ class _DetailsPageState extends State<DetailsPage> {
               Row(
                 children: <Widget>[
                   Icon(Icons.star, color: Colors.white),
-                   SizedBox(width: 8,),
+                  SizedBox(
+                    width: 8,
+                  ),
                   Text(
-                    widget.profile.interest,
+                    widget.profile.interest ?? 'default value',
                     style: TextStyle(
                       color: Colors.white,
                     ),
@@ -160,9 +211,11 @@ class _DetailsPageState extends State<DetailsPage> {
               Row(
                 children: <Widget>[
                   Icon(Icons.score, color: Colors.white),
-                   SizedBox(width: 8,),
+                  SizedBox(
+                    width: 8,
+                  ),
                   Text(
-                    widget.profile.gpa,
+                    widget.profile.gpa ?? 'default value',
                     style: TextStyle(
                       color: Colors.white,
                     ),
@@ -192,9 +245,12 @@ class _DetailsPageState extends State<DetailsPage> {
               Row(
                 children: <Widget>[
                   Icon(Icons.person, color: Colors.white),
-                   SizedBox(width: 8,),
+                  SizedBox(
+                    width: 8,
+                  ),
                   Text(
-                    widget.profile.first+" "+widget.profile.last,
+                    widget.profile.first + " " + widget.profile.last ??
+                        'default value',
                     style: TextStyle(
                       color: Colors.white,
                     ),
@@ -205,9 +261,11 @@ class _DetailsPageState extends State<DetailsPage> {
               Row(
                 children: <Widget>[
                   Icon(Icons.email, color: Colors.white),
-                   SizedBox(width: 8,),
+                  SizedBox(
+                    width: 8,
+                  ),
                   Text(
-                    widget.profile.email,
+                    widget.profile.email ?? 'default value',
                     style: TextStyle(
                       color: Colors.white,
                     ),
@@ -218,9 +276,11 @@ class _DetailsPageState extends State<DetailsPage> {
               Row(
                 children: <Widget>[
                   Icon(Icons.location_on, color: Colors.white),
-                   SizedBox(width: 8,),
+                  SizedBox(
+                    width: 8,
+                  ),
                   Text(
-                    widget.profile.location,
+                    widget.profile.location ?? 'default value',
                     style: TextStyle(
                       color: Colors.white,
                     ),
@@ -231,9 +291,11 @@ class _DetailsPageState extends State<DetailsPage> {
               Row(
                 children: <Widget>[
                   Icon(Icons.phone, color: Colors.white),
-                   SizedBox(width: 8,),
+                  SizedBox(
+                    width: 8,
+                  ),
                   Text(
-                    widget.profile.phone,
+                    widget.profile.phone ?? 'default value',
                     style: TextStyle(
                       color: Colors.white,
                     ),
@@ -244,9 +306,11 @@ class _DetailsPageState extends State<DetailsPage> {
               Row(
                 children: <Widget>[
                   Icon(Icons.people, color: Colors.white),
-                   SizedBox(width: 8,),
+                  SizedBox(
+                    width: 8,
+                  ),
                   Text(
-                    widget.profile.gender,
+                    widget.profile.gender ?? 'default value',
                     style: TextStyle(
                       color: Colors.white,
                     ),
