@@ -30,6 +30,9 @@ class _NotificationActivityState extends State<NotificationActivity> {
                 ),
               ],
             ),
+             Divider(
+            thickness: 2,
+          ),
            
             buildNotificationListContainer(userNotification),
           ],
@@ -54,6 +57,8 @@ class _NotificationActivityState extends State<NotificationActivity> {
         itemBuilder: (context, index) {
           final note = userNotification[index];
 
+          print(note);
+
           return ListTile(
             contentPadding: EdgeInsets.all(8.0),
             leading: CircleAvatar(
@@ -62,7 +67,7 @@ class _NotificationActivityState extends State<NotificationActivity> {
               radius: 30,
             ),
             title: Text(note.notifyMessage ?? "default value"),
-            subtitle: Text(note.timestamp ?? "defaultvalue"),
+            //subtitle: Text(DateTime.fromMillisecondsSinceEpoch(int.parse(note.timestamp), isUtc: true) ?? "defaultvalue"),
             dense: true,
           );
         },

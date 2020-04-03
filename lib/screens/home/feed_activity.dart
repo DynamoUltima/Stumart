@@ -45,6 +45,9 @@ class _FeedActivityState extends State<FeedActivity> {
           buildSearch(),
           SizedBox(height: 10),
           buildProfileText(),
+           Divider(
+            thickness: 2,
+          ),
           buildProfileListContainer(userProfiles),
         ],
       ),

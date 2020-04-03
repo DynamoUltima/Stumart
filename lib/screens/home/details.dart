@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:phone_auth_app/models/user.dart';
 import 'package:phone_auth_app/models/user_profile.dart';
+import 'package:phone_auth_app/screens/home/news_feed.dart';
 import 'package:phone_auth_app/services/database.dart';
 import 'package:provider/provider.dart';
 
@@ -80,10 +81,15 @@ class _DetailsPageState extends State<DetailsPage> {
         final user = Provider.of<User>(context, listen: false);
         String notifyMessage =
             "Company Name has sent a request for an internship";
+            var notifyTimeStamp= DateTime.now().toUtc().millisecondsSinceEpoch;
         Map<String, Object> notify = HashMap();
         notify.putIfAbsent("notifyMessage", () => notifyMessage);
+        notify.putIfAbsent("timestamp", () => notifyTimeStamp.toString());
+        //retrieving data
+        //DateTime.fromMillisecondsSinceEpoch(doc.data['timestamp'], isUtc: true),
         await DatabaseService(uid: user.uid).notifyUser(notify,widget.profile.postId).then((response){
           print(response);
+          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>NewsFeedPage()));
         }).catchError((onError){
           print(onError);
         });

@@ -3,6 +3,7 @@ import 'package:phone_auth_app/models/user.dart';
 import 'package:phone_auth_app/screens/authenticate/authenticate.dart';
 import 'package:phone_auth_app/screens/home/home.dart';
 import 'package:phone_auth_app/screens/home/intro.dart';
+import 'package:phone_auth_app/screens/home/news_feed.dart';
 import 'package:provider/provider.dart';
 
 
@@ -17,9 +18,9 @@ class Wrapper extends StatelessWidget {
     
 
    if(user == null){
-     return Authenticate();//Intro( should be here)
+     return Intro();//Intro( should be here)
    } else{
-     return Intro();//this should be reversed but may be lept so for testing purposes  
+     return NewsFeedPage();//this should be reversed but may be lept so for testing purposes  
      //News activity should be here
 
      //Home();

@@ -39,6 +39,7 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
 
   FloatingActionButton buildFloatingActionButton() {
     return FloatingActionButton(
+      tooltip: "Post your Profile",
       child: Icon(
         Icons.add,
         color: Colors.white,
@@ -62,6 +63,10 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
       clipBehavior: Clip.antiAlias,
       elevation: 10,
       child: BottomNavigationBar(
+        // type: BottomNavigationBarType.shifting,
+        selectedItemColor: Colors.teal,
+        unselectedItemColor: Colors.grey,
+        showUnselectedLabels: true,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -72,7 +77,7 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
             title: Text('Notifcations'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
+            icon: Icon(Icons.settings),
             title: Text('Settings'),
           ),
         ],
