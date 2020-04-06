@@ -5,7 +5,7 @@ class UserData {
   final String last;
   final String location;
   final String phone;
-  final String program;
+  // final String program;
 
   UserData({
     this.email,
@@ -14,6 +14,6 @@ class UserData {
     this.last,
     this.location,
     this.phone,
-    this.program,
+    // this.program,
   });
 }

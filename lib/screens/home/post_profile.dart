@@ -21,14 +21,32 @@ class _PostProfileState extends State<PostProfile> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   final dateFormat = DateFormat("EEEE, MMMM d, yyyy");
-  
 
   String _gender;
   String _campus;
   DateTime _dob;
   String _interest;
   String _gpa;
-  UserData userData ;
+  String _program;
+  UserData userData;
+
+  Widget _buildProgram() {
+    return TextFormField(
+      decoration: TextDecoration.copyWith(labelText: "Program"),
+      keyboardType: TextInputType.text,
+      validator: (val) {
+        if (val.isEmpty) {
+          return "Enter Last Name";
+        }
+        return null;
+      },
+      onChanged: (val) {
+        setState(() {
+          _program = val;
+        });
+      },
+    );
+  }
 
   Widget _buildInterest() {
     return TextFormField(
@@ -191,7 +209,7 @@ class _PostProfileState extends State<PostProfile> {
       color: Colors.teal,
       onPressed: () async {
         if (_formkey.currentState.validate()) {
-          final user = Provider.of<User>(context,listen: false);
+          final user = Provider.of<User>(context, listen: false);
           Map<String, Object> postProfile = HashMap();
           postProfile.putIfAbsent("first", () => userData.first);
           postProfile.putIfAbsent("last", () => userData.last);
@@ -199,7 +217,7 @@ class _PostProfileState extends State<PostProfile> {
           postProfile.putIfAbsent("identity", () => userData.identity);
           postProfile.putIfAbsent("location", () => userData.location);
           postProfile.putIfAbsent("phone", () => userData.phone);
-          postProfile.putIfAbsent("program", () => userData.program);
+          postProfile.putIfAbsent("program", () => _program);
           postProfile.putIfAbsent("gender", () => _gender);
           postProfile.putIfAbsent("age", () => calculateAge(_dob).toString());
           postProfile.putIfAbsent("campus", () => _campus);
@@ -225,49 +243,43 @@ class _PostProfileState extends State<PostProfile> {
     return StreamBuilder<UserData>(
       stream: DatabaseService(uid: user.uid).retrieveUserInfo,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-
-     
         userData = snapshot.data;
 
-        
-        if(snapshot.hasData){
+        if (snapshot.hasData) {
           print(userData.email);
           return Scaffold(
-          appBar: AppBar(title: Text("Post Your Profile")),
-          body: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              child: Form(
-                key: _formkey,
-                child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 55,
-                    ),
-                    _buildInterest(),
-                    _buildGPA(),
-                    _buildCampus(),
-                    _buildDob(),
-                    _buildGender(),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    _submitPostButton(context, userData)
-                  ],
+            appBar: AppBar(title: Text("Post Your Profile")),
+            body: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: Form(
+                  key: _formkey,
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 55,
+                      ),
+                      _buildInterest(),
+                      _buildGPA(),
+                      _buildCampus(),
+                      _buildProgram(),
+                      _buildDob(),
+                      _buildGender(),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      _submitPostButton(context, userData)
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-
-        }else{
+          );
+        } else {
           return Loading();
         }
-     
-         
-        
       },
     );
   }

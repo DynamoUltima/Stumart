@@ -17,6 +17,10 @@ class DatabaseService {
   final CollectionReference postCollection =
       Firestore.instance.collection("Posts");
 
+  Future updateUserInfo(Map userDataInfo) async {
+    return await userCollection.document(uid).updateData(userDataInfo);
+  }
+
   Future updateUserData(Map userInfo) async {
     return await userCollection.document(uid).setData(userInfo);
   }
@@ -39,7 +43,7 @@ class DatabaseService {
       last: snapshot.data['last'] ?? "",
       location: snapshot.data['location'] ?? "",
       phone: snapshot.data['phone'] ?? "",
-      program: snapshot.data['program'] ?? "",
+      // program: snapshot.data['program'] ?? "",
     );
   }
 

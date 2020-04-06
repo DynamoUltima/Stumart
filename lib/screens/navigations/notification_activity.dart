@@ -57,7 +57,7 @@ class _NotificationActivityState extends State<NotificationActivity> {
         itemBuilder: (context, index) {
           final note = userNotification[index];
 
-          print(note);
+         
 
           return ListTile(
             contentPadding: EdgeInsets.all(8.0),
@@ -67,7 +67,7 @@ class _NotificationActivityState extends State<NotificationActivity> {
               radius: 30,
             ),
             title: Text(note.notifyMessage ?? "default value"),
-            //subtitle: Text(DateTime.fromMillisecondsSinceEpoch(int.parse(note.timestamp), isUtc: true) ?? "defaultvalue"),
+            //subtitle: Text(DateTime.fromMillisecondsSinceEpoch(int.parse(note.timestamp), isUtc: true).toString() ?? "defaultvalue"),
             dense: true,
           );
         },

@@ -35,7 +35,7 @@ class _FeedActivityState extends State<FeedActivity> {
     //final user = Provider.of<User>(context);
     double screenHeight = MediaQuery.of(context).size.height;
 
-    final userProfiles = Provider.of<List<UserProfile>>(context);
+    final userProfiles = Provider.of<List<UserProfile>>(context) ?? [];
 
     return Container(
       child: Column(
@@ -45,7 +45,7 @@ class _FeedActivityState extends State<FeedActivity> {
           buildSearch(),
           SizedBox(height: 10),
           buildProfileText(),
-           Divider(
+          Divider(
             thickness: 2,
           ),
           buildProfileListContainer(userProfiles),
@@ -55,7 +55,9 @@ class _FeedActivityState extends State<FeedActivity> {
   }
 
   Widget buildProfileListContainer(List<UserProfile> userProfiles) {
-    if (userProfiles.isNotEmpty) {
+    if (userProfiles.length != null) {
+      
+
       return Container(
         child: ListView.builder(
           dragStartBehavior: DragStartBehavior.start,
@@ -65,6 +67,7 @@ class _FeedActivityState extends State<FeedActivity> {
           physics: ClampingScrollPhysics(),
           itemBuilder: (context, index) {
             final profile = userProfiles[index];
+           
 
             return ProfileTile(profile: profile);
           },

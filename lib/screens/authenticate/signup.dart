@@ -18,7 +18,6 @@ class _SignUpPageState extends State<SignUpPage> {
   String _email;
   String _password;
   String _phoneNumber;
-  String _program;
   String _location;
 
   var _categories = ["Student", "Company", "Not Student"];
@@ -124,23 +123,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _buildProgram() {
-    return TextFormField(
-      decoration: TextDecoration.copyWith(labelText: "Program"),
-      keyboardType: TextInputType.text,
-      validator: (val) {
-        if (val.isEmpty) {
-          return "Enter Last Name";
-        }
-        return null;
-      },
-      onChanged: (val) {
-        setState(() {
-          _program = val;
-        });
-      },
-    );
-  }
+  
 
   Widget _buildLocation() {
     return TextFormField(
@@ -209,7 +192,6 @@ class _SignUpPageState extends State<SignUpPage> {
           userInfo.putIfAbsent("last", () => _lastName);
           userInfo.putIfAbsent("email", () => _email);
           userInfo.putIfAbsent("phone", () => _phoneNumber);
-          userInfo.putIfAbsent("program", () => _program);
           userInfo.putIfAbsent("location", () => _location);
           userInfo.putIfAbsent("identity", () => _identityValue);
 
@@ -267,7 +249,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         _buildPhoneNumber(),
                         _buildIdentity(),
                         _buildLocation(),
-                        _buildProgram(),
+                        //_buildProgram(),
                         SizedBox(
                           height: 15,
                         ),
