@@ -11,13 +11,13 @@ class Intro extends StatefulWidget {
 }
 
 class _IntroState extends State<Intro> {
-  var SecondColor = Colors.teal[400];
+  var secondColor = Colors.teal[400];
 
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-    AssetImage assetImage = AssetImage('images/image_01.png');
+    AssetImage assetImage = AssetImage('images/stumart.jpg');
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -31,6 +31,7 @@ class _IntroState extends State<Intro> {
 
     return Scaffold(
           body: Container(
+            color: Colors.white,
         child: Container(
           height: screenHeight,
           alignment: Alignment.center,
@@ -41,7 +42,7 @@ class _IntroState extends State<Intro> {
                 height: screenHeight * 0.2,
               ),
               Container(child: image),
-              Text('Stumart', style: TextStyle(fontSize: 32, color: Colors.teal[400])),
+              ///Text('Stumart', style: TextStyle(fontSize: 32, color: Colors.teal[400])),
               SizedBox(
                 height: screenHeight * 0.1,
               ),

@@ -30,20 +30,58 @@ class _PostProfileState extends State<PostProfile> {
   String _program;
   UserData userData;
 
+  // Widget _buildProgram() {
+  //   return TextFormField(
+  //     decoration: TextDecoration.copyWith(labelText: "Program"),
+  //     keyboardType: TextInputType.text,
+  //     validator: (val) {
+  //       if (val.isEmpty) {
+  //         return "Enter Last Name";
+  //       }
+  //       return null;
+  //     },
+  //     onChanged: (val) {
+  //       setState(() {
+  //         _program = val;
+  //       });
+  //     },
+  //   );
+  // }
+
   Widget _buildProgram() {
-    return TextFormField(
-      decoration: TextDecoration.copyWith(labelText: "Program"),
-      keyboardType: TextInputType.text,
-      validator: (val) {
-        if (val.isEmpty) {
-          return "Enter Last Name";
-        }
-        return null;
-      },
-      onChanged: (val) {
-        setState(() {
-          _program = val;
-        });
+    return FormField<String>(
+      validator: (val) => val.isEmpty ? "Select an Option" : null,
+      builder: (FormFieldState<String> state) {
+        return InputDecorator(
+          decoration: InputDecoration(
+            labelText: "Program",
+            errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
+            hintText: 'Please select your program',
+          ),
+          isEmpty: _program== 'Select Program',
+          child: Container(
+            width: 300,
+                      child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+               // itemHeight: 80.0,
+                value: _program,
+                isDense: true,
+                onChanged: (String newValue) {
+                  setState(() {
+                    _program = newValue;
+                    state.didChange(newValue);
+                  });
+                },
+                items: CampusPrograms.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+        );
       },
     );
   }

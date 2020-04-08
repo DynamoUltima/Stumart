@@ -2,9 +2,11 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:phone_auth_app/models/user.dart';
+import 'package:phone_auth_app/models/user_data.dart';
 import 'package:phone_auth_app/models/user_profile.dart';
 import 'package:phone_auth_app/screens/home/news_feed.dart';
 import 'package:phone_auth_app/services/database.dart';
+import 'package:phone_auth_app/shared/loading.dart';
 import 'package:provider/provider.dart';
 
 class DetailsPage extends StatefulWidget {
@@ -18,6 +20,7 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
+  UserData userData;
   var personalInfoText = Row(
     children: <Widget>[
       Text(
@@ -37,60 +40,76 @@ class _DetailsPageState extends State<DetailsPage> {
   );
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Details"),
-      ),
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            SizedBox(
-              height: 40,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: personalInfoText,
-            ),
-            buildPersonalInfo(),
-            SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: otherDetailsText,
-            ),
-            buildOtherInfo(),
-            SizedBox(
-              height: 20,
-            ),
-            buildInterestCard(),
-            SizedBox(
-              height: 20,
-            ),
-            buildAddButton(context)
-          ],
-        ),
-      ),
-    );
+    final user = Provider.of<User>(context);
+    return StreamBuilder<UserData>(
+        stream: DatabaseService(uid: user.uid).retrieveUserInfo,
+        builder: (context, snapshot) {
+          userData = snapshot.data;
+          
+
+          if (snapshot.hasData) {
+            print(userData.first);
+            return Scaffold(
+              appBar: AppBar(
+                title: Text("Details"),
+              ),
+              body: Container(
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 40,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: personalInfoText,
+                    ),
+                    buildPersonalInfo(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: otherDetailsText,
+                    ),
+                    buildOtherInfo(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    buildInterestCard(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    buildAddButton(context,userData)
+                  ],
+                ),
+              ),
+            );
+          } else {
+            return Loading();
+          }
+        });
   }
 
-  Widget buildAddButton(BuildContext context) {
+  Widget buildAddButton(BuildContext context, UserData userData) {
     return RaisedButton(
       color: Colors.teal,
       onPressed: () async {
         final user = Provider.of<User>(context, listen: false);
         String notifyMessage =
-            "Company Name has sent a request for an internship";
-            var notifyTimeStamp= DateTime.now().toUtc().millisecondsSinceEpoch;
+            "${userData.first} ${userData.last} has sent a request for an internship";
+        var notifyTimeStamp = DateTime.now().toUtc().millisecondsSinceEpoch;
         Map<String, Object> notify = HashMap();
         notify.putIfAbsent("notifyMessage", () => notifyMessage);
         notify.putIfAbsent("timestamp", () => notifyTimeStamp.toString());
         //retrieving data
         //DateTime.fromMillisecondsSinceEpoch(doc.data['timestamp'], isUtc: true),
-        await DatabaseService(uid: user.uid).notifyUser(notify,widget.profile.postId).then((response){
+        await DatabaseService(uid: user.uid)
+            .notifyUser(notify, widget.profile.postId)
+            .then((response) {
           print(response);
-          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>NewsFeedPage()));
-        }).catchError((onError){
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => NewsFeedPage()));
+        }).catchError((onError) {
           print(onError);
         });
       },

@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:phone_auth_app/models/user_notifications.dart';
-import 'package:phone_auth_app/models/user_profile.dart';
 import 'package:phone_auth_app/shared/loading.dart';
 import 'package:provider/provider.dart';
 
@@ -26,14 +26,16 @@ class _NotificationActivityState extends State<NotificationActivity> {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text("Notifications",textScaleFactor: 1.5,),
+                  child: Text(
+                    "Notifications",
+                    textScaleFactor: 1.5,
+                  ),
                 ),
               ],
             ),
-             Divider(
-            thickness: 2,
-          ),
-           
+            Divider(
+              thickness: 2,
+            ),
             buildNotificationListContainer(userNotification),
           ],
         );
@@ -57,18 +59,27 @@ class _NotificationActivityState extends State<NotificationActivity> {
         itemBuilder: (context, index) {
           final note = userNotification[index];
 
-         
+          DateTime parsedt = DateTime.fromMillisecondsSinceEpoch(
+              int.parse(note.timestamp ?? ""),
+              isUtc: true);
 
-          return ListTile(
-            contentPadding: EdgeInsets.all(8.0),
-            leading: CircleAvatar(
-              backgroundColor: Colors.blue,
-              child: Icon(Icons.person),
-              radius: 30,
-            ),
-            title: Text(note.notifyMessage ?? "default value"),
-            //subtitle: Text(DateTime.fromMillisecondsSinceEpoch(int.parse(note.timestamp), isUtc: true).toString() ?? "defaultvalue"),
-            dense: true,
+          var notificationTime = DateFormat.yMMMd().format(parsedt);
+
+          return Column(
+            children: <Widget>[
+              ListTile(
+                contentPadding: EdgeInsets.all(8.0),
+                leading: CircleAvatar(
+                  backgroundColor: Colors.blue,
+                  child: Icon(Icons.person),
+                  radius: 30,
+                ),
+                title: Text(note.notifyMessage ?? "default value"),
+                subtitle: Text(notificationTime ?? "defaultvalue"),
+                dense: true,
+              ),
+              Divider()
+            ],
           );
         },
       ),
