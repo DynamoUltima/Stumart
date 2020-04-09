@@ -71,6 +71,7 @@ class DatabaseService {
         gpa: doc.data["gpa"] ?? "",
         postId: doc.data["post_id"] ?? "",
         interest: doc.data["interest"] ?? "",
+        postTimeStamp: doc.data["timestamp"] ?? "",
       );
     }).toList();
   }
@@ -84,6 +85,9 @@ class DatabaseService {
   }
 
   Stream<List<UserProfile>> get retrieveUserProfile {
+    // order by timestamp
+    // return postCollection.orderBy('timestamp',descending:true).snapshots().map(_userProfileListFromSnapShot);
+    
     return postCollection.snapshots().map(_userProfileListFromSnapShot);
   }
 

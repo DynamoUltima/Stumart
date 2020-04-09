@@ -37,6 +37,8 @@ class _FeedActivityState extends State<FeedActivity> {
 
     final userProfiles = Provider.of<List<UserProfile>>(context) ?? [];
 
+    //build new list preferably filtered list
+
     return Container(
       child: Column(
         children: <Widget>[

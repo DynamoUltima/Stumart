@@ -248,6 +248,7 @@ class _PostProfileState extends State<PostProfile> {
       onPressed: () async {
         if (_formkey.currentState.validate()) {
           final user = Provider.of<User>(context, listen: false);
+          var detailTimeStamp = DateTime.now().toUtc().millisecondsSinceEpoch;
           Map<String, Object> postProfile = HashMap();
           postProfile.putIfAbsent("first", () => userData.first);
           postProfile.putIfAbsent("last", () => userData.last);
@@ -261,6 +262,7 @@ class _PostProfileState extends State<PostProfile> {
           postProfile.putIfAbsent("campus", () => _campus);
           postProfile.putIfAbsent("gpa", () => _gpa);
           postProfile.putIfAbsent("interest", () => _interest);
+          postProfile.putIfAbsent("timestamp", () => detailTimeStamp.toString());
           postProfile.putIfAbsent("post_id", () => user.uid);
 
           await DatabaseService(uid: user.uid)

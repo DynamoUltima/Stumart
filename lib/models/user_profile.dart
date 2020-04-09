@@ -11,9 +11,11 @@ class UserProfile {
   final String campus;
   final String interest;
   final String gpa;
+  final String postTimeStamp;
   final String postId;
 
-  UserProfile( 
+
+  UserProfile(  
       {this.email,
       this.first,
       this.identity,
@@ -26,5 +28,6 @@ class UserProfile {
       this.campus,
       this.interest,
       this.gpa,
+      this.postTimeStamp,
       this.postId});
 }
